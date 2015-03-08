@@ -97,7 +97,9 @@ ko.bindingHandlers['validationElement'] = {
 			val = ko.utils.unwrapObservable(obsv),
 			msg = null,
 			isModified = false,
-			isValid = false;
+			isValid = false,
+			isValidated = false,
+			isRequired = false;
 
 		if (obsv === null || typeof obsv === 'undefined') {
 			throw new Error('Cannot bind validationElement to undefined value. data-bind expression: ' +
@@ -106,6 +108,8 @@ ko.bindingHandlers['validationElement'] = {
 
 		isModified = obsv.isModified && obsv.isModified();
 		isValid = obsv.isValid && obsv.isValid();
+		isValidated = !!obsv.rules()[0] || false;
+		isRequired = isValidated && obsv.rules()[0].rule === 'required' || false;
 
 		// create an evaluator function that will return something like:
 		// css: { validationElement: true }
@@ -113,9 +117,13 @@ ko.bindingHandlers['validationElement'] = {
 			var css = {};
 
 			var shouldShow = ((!config.decorateElementOnModified || isModified) ? !isValid : false);
+			var shouldShowValid = ((!config.decorateElementOnModified || isModified) ? isValid : false);
+			var shouldShowRequired = isRequired;
 
 			// css: { validationElement: false }
 			css[config.errorElementClass] = shouldShow;
+			css[config.validElementClass] = shouldShowValid;
+			css[config.requiredElementClass] = shouldShowRequired;
 
 			return css;
 		};
