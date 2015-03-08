@@ -108,8 +108,8 @@ ko.bindingHandlers['validationElement'] = {
 
 		isModified = obsv.isModified && obsv.isModified();
 		isValid = obsv.isValid && obsv.isValid();
-		isValidated = !!obsv.rules()[0] || false;
-		isRequired = isValidated && obsv.rules()[0].rule === 'required' || false;
+		isValidated = obsv.rules && (!!obsv.rules()[0] || false);
+		isRequired = obsv.rules && (isValidated && obsv.rules()[0].rule === 'required' || false);
 
 		// create an evaluator function that will return something like:
 		// css: { validationElement: true }

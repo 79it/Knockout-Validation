@@ -51,6 +51,8 @@ var defaults = {
 	errorClass: null,               // single class for error message and element
 	errorElementClass: 'validationElement',  // class to decorate error element
 	errorMessageClass: 'validationMessage',  // class to decorate error message
+	validElementClass: 'validationValid',        // class to decorate valid element
+	requiredElementClass: 'validationRequired',  // class to decorate required element
 	allowHtmlMessages: false,		// allows HTML in validation messages
 	grouping: {
 		deep: false,        //by default grouping is shallow
@@ -312,6 +314,8 @@ kv.configuration = configuration;
 			//errorElementClass and errorMessage class but not those provided in options
 			options.errorElementClass = options.errorElementClass || options.errorClass || configuration.errorElementClass;
 			options.errorMessageClass = options.errorMessageClass || options.errorClass || configuration.errorMessageClass;
+			options.validElementClass = options.validElementClass || configuration.validElementClass;
+			options.requiredElementClass = options.requiredElementClass || configuration.requiredElementClass;
 
 			extend(configuration, options);
 
@@ -1103,7 +1107,9 @@ ko.bindingHandlers['validationElement'] = {
 			val = unwrap(obsv),
 			msg = null,
 			isModified = false,
-			isValid = false;
+			isValid = false,
+			isValidated = false,
+			isRequired = false;
 
 		if (obsv === null || typeof obsv === 'undefined') {
 			throw new Error('Cannot bind validationElement to undefined value. data-bind expression: ' +
@@ -1112,6 +1118,8 @@ ko.bindingHandlers['validationElement'] = {
 
 		isModified = obsv.isModified && obsv.isModified();
 		isValid = obsv.isValid && obsv.isValid();
+		isValidated = obsv.rules && (!!obsv.rules()[0] || false);
+		isRequired = obsv.rules && (isValidated && obsv.rules()[0].rule === 'required' || false);
 
 		// create an evaluator function that will return something like:
 		// css: { validationElement: true }
@@ -1119,9 +1127,12 @@ ko.bindingHandlers['validationElement'] = {
 			var css = {};
 
 			var shouldShow = ((!config.decorateElementOnModified || isModified) ? !isValid : false);
+			var shouldShowValid = ((!config.decorateElementOnModified || isModified) ? isValid : false);
 
 			// css: { validationElement: false }
 			css[config.errorElementClass] = shouldShow;
+			css[config.validElementClass] = shouldShowValid;
+			css[config.requiredElementClass] = isRequired;
 
 			return css;
 		};

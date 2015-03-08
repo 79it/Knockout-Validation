@@ -639,7 +639,7 @@ QUnit.test('Issue #519 - validationElement can be applied before element is vali
     vm.testObj.extend({ required: true });
     vm.testObj(null);
     assert.ok(ko.validation.utils.isValidatable(vm.testObj));
-    assert.strictEqual($("#testElement").attr("class"), "validationElement");
+    assert.strictEqual($("#testElement").attr("class"), "validationRequired validationElement");
     assert.strictEqual($("#testElement").attr("title"), "This field is required.");
 
     vm.testObj.extend({ validatable: false });
