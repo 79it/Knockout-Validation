@@ -114,8 +114,6 @@
 			//errorElementClass and errorMessage class but not those provided in options
 			options.errorElementClass = options.errorElementClass || options.errorClass || configuration.errorElementClass;
 			options.errorMessageClass = options.errorMessageClass || options.errorClass || configuration.errorMessageClass;
-			options.validElementClass = options.validElementClass || configuration.validElementClass;
-			options.requiredElementClass = options.requiredElementClass || configuration.requiredElementClass;
 
 			ko.utils.extend(configuration, options);
 
