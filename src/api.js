@@ -328,12 +328,13 @@
 				//	  }
 				//  )};
 				//
-				if (params && (params.message || params.onlyIf)) { //if it has a message or condition object, then its an object literal to use
+				if (params && (params.message || params.onlyIf || params.constraintGroupId)) { //if it has a message or condition object, then its an object literal to use
 					return ko.validation.addRule(observable, {
 						rule: ruleName,
 						message: params.message,
 						params: utils.isEmptyVal(params.params) ? true : params.params,
-						condition: params.onlyIf
+						condition: params.onlyIf,
+						constraintGroupId: params.constraintGroupId
 					});
 				} else {
 					return ko.validation.addRule(observable, {
